@@ -14,8 +14,8 @@ const PIPE_SPACE = 256;
 const PIPE_START = 384;
 const PIPE_MIN_HEIGHT = 96;
 const PIPE_MAX_HEIGHT = 192;
-const PIPE_MIN_WIDTH = 16;
-const PIPE_MAX_WIDTH = 64;
+const PIPE_MIN_WIDTH = 64;
+const PIPE_MAX_WIDTH = 96;
 const PIPE_MIN_SPEED = 2.5;
 const PIPE_MAX_SPEED = 10;
 const PIPE_PADDING = 32;
@@ -25,6 +25,22 @@ let SPEED = 1;
 let pipeCount = 1;
 let count = 1;
 
+var score = 0;
+var highscore = 0;
+
+let sprites = [];
+let backgroundImg;
+let pipeImg = [];
+
+function preload() {
+	sprites[0] = loadImage('assets/yellowbird-upflap.png');
+	sprites[1] = loadImage('assets/yellowbird-midflap.png');
+	sprites[2] = loadImage('assets/yellowbird-downflap.png');
+	backgroundImg = loadImage('assets/background-day.png');
+	pipeImg[0] = loadImage('assets/pipe-green.png');
+	pipeImg[1] = loadImage('assets/pipe-green-down.png');
+}
+
 function setup() {
 	createCanvas(640, 480);
 	init();
@@ -32,15 +48,12 @@ function setup() {
 
 function draw() {
 	background(0);
-	rectangle();
+	for (let i = 0; i < 4; i++) {
+		let imgRatio = backgroundImg.width / backgroundImg.height;
+		imageMode(CORNER);
+		image(backgroundImg, -(frameCount % backgroundImg.width) + i * backgroundImg.width, 0, width, height);
+	}
 	noStroke();
-
-	fill(0, 255, 0);
-	textSize(16);
-	textAlign(LEFT);
-	text('Speed: ' + SPEED, 16, 32);
-	text('Population: ' + POPULATION, 16, 64);
-	text('Generation: ' + count, 16, 96);
 
 	let birdCount = 0;
 	birds.forEach((bird) => {
@@ -52,6 +65,19 @@ function draw() {
 	pipes.forEach((pipe) => {
 		pipe.show();
 	});
+
+	fill(0);
+	textSize(16);
+	textAlign(LEFT);
+	text('Speed: ' + SPEED, 16, 32);
+	text('Population: ' + birds.length + ' of ' + POPULATION, 16, 64);
+	text('Generation: ' + count, 16, 96);
+
+	textAlign(CENTER);
+	textSize(64);
+	text(score, width / 2, 64);
+	textSize(32);
+	text(highscore, width / 2, 96);
 
 	for (let i = 0; i < SPEED; i++) {
 		update();
@@ -66,7 +92,7 @@ function update() {
 			map(bird.y, bird.r, height - bird.r, 0, 1),
 			(nextPipe.top - bird.y) / height,
 			(nextPipe.bottom - bird.y) / height,
-			(nextPipe.x - bird.x) / width,
+			(nextPipe.x + nextPipe.w - bird.x) / width,
 			nextPipe.slalomEneble ? 1 : 0,
 			map(nextPipe.w, PIPE_MIN_WIDTH, PIPE_MAX_WIDTH, 0, 1),
 			map(nextPipe.gateHeight, PIPE_MIN_HEIGHT, PIPE_MAX_HEIGHT, 0, 1),
@@ -95,7 +121,7 @@ function update() {
 	});
 
 	if (pipes[pipes.length - 1].x <= width - PIPE_SPACE) {
-		pipes.push(new Pipe(width, pipeCount++));
+		pipes.push(new Pipe(width, pipeCount++, pipeImg));
 		pipes.shift();
 	}
 }
@@ -135,16 +161,17 @@ function init() {
 	generation = new Generation(config);
 	birds = [];
 	for (let i = 0; i < POPULATION; i++) {
-		birds.push(new Bird(generation.networks[i]));
+		birds.push(new Bird(generation.networks[i], sprites));
 	}
 
 	pipes = [];
 	for (let i = 0; i < 3; i++) {
-		pipes.push(new Pipe(PIPE_START + (i + 1) * PIPE_SPACE, pipeCount++));
+		pipes.push(new Pipe(PIPE_START + (i + 1) * PIPE_SPACE, pipeCount++, pipeImg));
 	}
 }
 
 function reset() {
+	score = 0;
 	let config = {
 		generation: generation
 	};
@@ -153,12 +180,12 @@ function reset() {
 	pipeCount = 1;
 	birds = [];
 	for (let i = 0; i < POPULATION; i++) {
-		birds.push(new Bird(generation.networks[i]));
+		birds.push(new Bird(generation.networks[i], sprites));
 	}
 
 	pipes = [];
 	for (let i = 0; i < 3; i++) {
-		pipes.push(new Pipe(PIPE_START + (i + 1) * PIPE_SPACE, pipeCount++));
+		pipes.push(new Pipe(PIPE_START + (i + 1) * PIPE_SPACE, pipeCount++, pipeImg));
 	}
 }
 

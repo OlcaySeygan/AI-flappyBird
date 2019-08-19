@@ -1,5 +1,5 @@
 class Pipe {
-	constructor(x, count) {
+	constructor(x, count, img) {
 		this.x = x;
 		this.w = Random.next(PIPE_MIN_WIDTH, PIPE_MAX_WIDTH);
 		this.gateHeight = Random.next(PIPE_MIN_HEIGHT, PIPE_MAX_HEIGHT);
@@ -16,17 +16,14 @@ class Pipe {
 		this.slalomEnable = Random.next(0, 1) < 0.75;
 
 		this.step = 0.01;
+
+		this.img = img;
 	}
 
 	show() {
-		noStroke();
-		fill(255);
-		rect(this.x, 0, this.w, this.top);
-		rect(this.x, this.bottom, this.w, height - this.bottom);
-		fill(255);
-		textSize(16);
-		textAlign(LEFT);
-		text(this.count, this.x, this.bottom - 12);
+		imageMode(CORNER);
+		image(this.img[1], this.x, 0, this.w, this.top);
+		image(this.img[0], this.x, this.bottom, this.w, height - this.bottom);
 	}
 
 	update() {
@@ -41,7 +38,7 @@ class Pipe {
 	slalom() {
 		if (this.slalomEnable) {
 			this.gateY = lerp(this.gateY, this.gateTarget, this.step);
-			if (abs(this.gateY - this.gateTarget) <= 4) {
+			if (abs(this.gateY - this.gateTarget) <= 32) {
 				this.gateTarget = Random.next(PIPE_PADDING, height - PIPE_PADDING - this.gateHeight);
 			}
 		}

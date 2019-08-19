@@ -1,8 +1,8 @@
 class Bird {
-	constructor(brain) {
+	constructor(brain, sprites) {
 		this.y = height / 2;
 		this.x = BIRD_START;
-		this.r = 12;
+		this.r = 13;
 
 		this.gravity = 0.3;
 		this.lift = -5;
@@ -12,17 +12,13 @@ class Bird {
 
 		this.isInPipe = false;
 		this.inPipe;
+
+		this.sprites = sprites;
 	}
 
 	show() {
-		stroke(255);
-		fill(255, 100);
-		ellipse(this.x, this.y, this.r * 2, this.r * 2);
-		fill(0);
-		noStroke(255);
-		textSize(12);
-		textAlign(CENTER);
-		text(this.brain.fitness, this.x, this.y + this.r / 2);
+		imageMode(CENTER);
+		image(this.sprites[frameCount % 3], this.x, this.y, this.r * 2, this.r * 2);
 	}
 
 	update() {
@@ -37,6 +33,12 @@ class Bird {
 		let state = false;
 		pipes.forEach((pipe) => {
 			if (this.x + this.r >= pipe.x && this.x - this.r <= pipe.x + pipe.w) {
+				if (!pipe.scored) {
+					pipe.scored = true;
+					score++;
+					if (highscore < score) highscore = score;
+				}
+
 				if (this.y - this.r <= pipe.top || this.y + this.r >= pipe.bottom) {
 					state = true;
 				} else {
