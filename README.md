@@ -24,3 +24,22 @@ Flappy Bird, tek kişilik bir oyundur.Kanat çırpan kuş her komutta yükselir 
     const POPULATION = 100; // Populasyonu değiştirmek için bu kodu kullanabilirsiniz.
     const PERCENT = 0.1; // Gösterilen kuş sayısını düşürerek performansı arttırmak için birde biçiminde bu değişkeni değiştirebilirsiniz.
     mutationRate: 0.01 // Kuşların bir sonraki nesle aktarıldığı sırada mutasyona uğrama şansını değiştirmek için kullanın.
+
+## Ağ Yapısı
+Basit yapılı sinir ağı kullanılmıştır. Sekiz girdisi, on altı gizli katmanda bulunan nöronu, iki de çıktı katmanda nöron bulunmaktadır. Gizli katmanlarda ReLU fonksiyonu kullanılıp çıktı katmanında ise SoftMAX ile desteklenmektedir. Geliştirilme sürecine girmiş bu ağ çok fazla hata barındırmakta olup düzenlenmesi için hiç bir hak talep edilmemektedir.
+
+**a) Girdiler**
+- Kuşun bulunduğu yükseklik.
+- Üst boruya olan dikey mesafe.
+- Alt boruya olan dikey mesafe.
+- Boruya olan yatay uzaklık.
+- Borunun hareket etme durumu.
+- Borunun kalınlığı.
+- Geçiş kapısının genişliği.
+- Borunun yatay hızı.
+
+**b) Çıktılar**
+İlk nöronunun ikici nörondan daha yüksek bir çıktı vermesi halinde zıplanması isteniyor.
+
+## Nesil
+Yüz bireyden oluşan nesilde sadece 10%'u gösterilmektedir(Bunun amacı çizimi azaltıp yükü almaktır). Her bir birey oyun sonundaki puanının karesini alıp başarsını daha ön plana çıkarıyor. Gerekli algoritmalardan geçirilip en uygun birey seçilip bir sonraki nesile aktarılması için Crossover işlemi tabi tutuluyor. Oluşan bu yeni birey mutasyona uğratılıp başarılı olabilmesi için gerekli genleri alması sağlanıyor.
