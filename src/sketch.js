@@ -5,7 +5,7 @@ let generation;
 
 const POPULATION = 100;
 
-const PERCENT = 0.1;
+const PERCENT = 1;
 
 const BIRD_START = 64;
 const BIRD_MAX_VELOCITY = 16;
@@ -31,6 +31,8 @@ var highscore = 0;
 let sprites = [];
 let backgroundImg;
 let pipeImg = [];
+
+let birdConfig = { units: [ 8, 16, 2 ] };
 
 function preload() {
 	sprites[0] = loadImage('assets/yellowbird-upflap.png');
@@ -82,6 +84,7 @@ function draw() {
 	for (let i = 0; i < SPEED; i++) {
 		update();
 	}
+	//SPEED = 0;
 }
 
 function update() {
@@ -133,15 +136,18 @@ function keyPressed() {
 			break;
 		case LEFT_ARROW:
 			SPEED -= 1;
-			SPEED = constrain(SPEED, 0, 100);
+			SPEED = constrain(SPEED, 0, 1000);
 			break;
 		case RIGHT_ARROW:
 			SPEED += 1;
-			SPEED = constrain(SPEED, 0, 100);
+			SPEED = constrain(SPEED, 0, 1000);
 			break;
 		case DOWN_ARROW:
-			SPEED += 10;
-			SPEED = constrain(SPEED, 0, 100);
+			SPEED += 100;
+			SPEED = constrain(SPEED, 0, 1000);
+			break;
+		case 32:
+			reset();
 			break;
 
 		default:
@@ -152,14 +158,14 @@ function keyPressed() {
 function init() {
 	let config = {
 		population: POPULATION,
-		input: 8,
-		hidden: 16,
-		output: 2,
-		mutationRate: 0.01
+		mutationRate: 0.01,
+		crossoverRate: 0.5,
+		units: birdConfig
 	};
 
 	generation = new Generation(config);
 	birds = [];
+
 	for (let i = 0; i < POPULATION; i++) {
 		birds.push(new Bird(generation.networks[i], sprites));
 	}
@@ -176,6 +182,7 @@ function reset() {
 		generation: generation
 	};
 	generation = new Generation(config);
+
 	count++;
 	pipeCount = 1;
 	birds = [];

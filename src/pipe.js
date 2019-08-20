@@ -1,10 +1,10 @@
 class Pipe {
 	constructor(x, count, img) {
 		this.x = x;
-		this.w = Random.next(PIPE_MIN_WIDTH, PIPE_MAX_WIDTH);
-		this.gateHeight = Random.next(PIPE_MIN_HEIGHT, PIPE_MAX_HEIGHT);
-		this.gateY = Random.next(PIPE_PADDING, height - PIPE_PADDING - this.gateHeight);
-		this.gateTarget = Random.next(PIPE_PADDING, height - PIPE_PADDING - this.gateHeight);
+		this.w = random.next(PIPE_MIN_WIDTH, PIPE_MAX_WIDTH);
+		this.gateHeight = random.next(PIPE_MIN_HEIGHT, PIPE_MAX_HEIGHT);
+		this.gateY = random.next(PIPE_PADDING, height - PIPE_PADDING - this.gateHeight);
+		this.gateTarget = random.next(PIPE_PADDING, height - PIPE_PADDING - this.gateHeight);
 
 		this.top = this.gateY;
 		this.bottom = this.gateY + this.gateHeight;
@@ -13,7 +13,7 @@ class Pipe {
 		this.speedStep = 0.001;
 		this.count = count;
 		this.scored = false;
-		this.slalomEnable = Random.next(0, 1) < 0.75;
+		this.slalomEnable = random.next(0, 1) < 0.75;
 
 		this.step = 0.01;
 
@@ -39,7 +39,7 @@ class Pipe {
 		if (this.slalomEnable) {
 			this.gateY = lerp(this.gateY, this.gateTarget, this.step);
 			if (abs(this.gateY - this.gateTarget) <= 32) {
-				this.gateTarget = Random.next(PIPE_PADDING, height - PIPE_PADDING - this.gateHeight);
+				this.gateTarget = random.next(PIPE_PADDING, height - PIPE_PADDING - this.gateHeight);
 			}
 		}
 	}
